@@ -110,7 +110,7 @@ New-AzureRmResource `
 				</section>	
 				<section>
 				<section>
-					<h2>Data manipulation</h2>
+					<h2>Data Manipulation</h2>
 					<h4>Csv to Table Storage</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 # $storageTable = Get-AzureStorageTable –Name "SampleTable" –Context $storageAccount.Context
@@ -135,7 +135,24 @@ $csvData | ConvertFrom-Csv | ForEach-Object {
 					<p><small>Prerequisite\> Install-Module AzureRmStorageTable</small></p>				
 				</section>
 				<section>
-					<h2>Data manipulation</h2>
+					<h2>Data Manipulation</h2>
+					<h4>Csv to Sql</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+$conn = New-Object Data.SqlClient.SqlConnection 'connection string'
+$cmd = $conn.CreateCommand()
+$cmd.CommandText = "INSERT INTO MyTable VALUES (@Name, @Age)"
+
+Import-Csv .\data.csv | Foreach-Object {
+	$cmd.Parameters.Clear()
+	$cmd.Parameters.AddWithValue("@Name",$_.Name)
+	$cmd.Parameters.AddWithValue("@Age",$_.Age)	
+	$cmd.ExecuteNonQuery()
+}
+					</code></pre>
+<!--					<p><small>Prerequisite\> Install-Module SqlServer</small></p>-->
+				</section>				
+				<section>
+					<h2>Data Manipulation</h2>
 					<h4>JSON configuration</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 $config = @"
@@ -152,7 +169,7 @@ $config | ConvertTo-Json | Out-File "appsettings.json"
 					</code></pre>
 				</section>
 				<section>
-					<h2>Data manipulation</h2>
+					<h2>Data Manipulation</h2>
 					<h4>XML configuration</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 $config = [xml] @"
@@ -168,20 +185,41 @@ $config.appsettings.instances.count = "1"
 $config.Save("appsettings.json")
 					</code></pre>
 				</section>
+				<section>
+					<h2>Data Manipulation</h2>
+					<h4>Generate Test Data</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+$template = @"
+{
+   "Name" : "[person]",
+   "Address" : {
+        "Street":"[address]",
+        "State":"[state abbr]"
+    }
+}
+"@
+
+Invoke-Generate $Template -Count 3 | 
+    ForEach-Object { ConvertFrom-Json $_ }
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module NameIT</small></p>
+				</section>				
 				</section>
 				<section>
 					<h2>Language Catch Up</h2>
 					<ul>
 						<li>Here strings, @"..."@</li>
 						<li>Foreach-Object</li>
-						<li>ConvertTo-*</li>
-						<li>ConvertFrom-*</li>
+						<li>New-Object</li>
+						<li>ConvertTo-*, ConvertFrom-*, Import-*</li>
 						<li>Type accelerators, [xml]</li>
 						<li>Out-File</li>
 					</ul>
-				</section>					
+				</section>		
+				<section>			
 				<section>
-					<h2>Implementing Azure Functions</h2>
+					<h2>Web API:s</h2>
+					<h4>Implementing Azure Functions</h4>
 					<!--
 						https://4sysops.com/archives/how-to-write-an-azure-function-in-powershell/ -->
 					<pre><code class="powershell" data-trim contenteditable>
@@ -200,14 +238,15 @@ Out-File -InputObject $response -FilePath $res -Encoding Ascii
 					</code></pre>
 				</section>					
 				<section>
-				<section>
-					<h2>Calling web apis</h2>
+					<h2>Web API:s</h2>
+					<h4>Requests & Responses</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 Invoke-RestMethod ...
 					</code></pre>
 				</section>
 				<section>
-					<h2>Curity</h2>
+					<h2>Web API:s</h2>
+					<h4>Curity</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 $token = Get-CurityToken clientid scope1, scope2
 
@@ -216,50 +255,9 @@ Invoke-RestMethod ... -Headers { Authorization = "Bearer $token "}
 					<p><small>Prerequisite\> Install-Module CurityPS</small></p>					
 				</section>
 				</section>
-
 				<section>
-					<h2>Generate Test Data</h2>
-					<pre><code class="powershell" data-trim contenteditable>
-$template = @"
-{
-   "Name" : "[person]",
-   "Address" : {
-        "Street":"[address]",
-        "State":"[state abbr]"
-    }
-}
-"@
-
-Invoke-Generate $Template -Count 3 | 
-    ForEach-Object { ConvertFrom-Json $_ }
-					</code></pre>
-					<p><small>Prerequisite\> Install-Module NameIT</small></p>
-				</section>
-				<section>
-					<h2>New-Example 'Csv to Sql'</h2>
-					<pre><code class="powershell" data-trim contenteditable>
-$conn = New-Object Data.SqlClient.SqlConnection 'connection string'
-$cmd = $conn.CreateCommand()
-$cmd.CommandText = "INSERT INTO MyTable VALUES (@Name, @Age)"
-
-Import-Csv .\data.csv | Foreach-Object {
-	$cmd.Parameters.Clear()
-	$cmd.Parameters.AddWithValue("@Name",$_.Name)
-	$cmd.Parameters.AddWithValue("@Age",$_.Age)	
-	$cmd.ExecuteNonQuery()
-}
-					</code></pre>
-<!--					<p><small>Prerequisite\> Install-Module SqlServer</small></p>-->
-				</section>
-				<section>
-					<h2>New-Demo 'Curity'</h2>
-					<pre><code class="powershell" data-trim contenteditable>
-Get-CurityToken ...
-					</code></pre>
-					<p><small>Prerequisite\> Install-Module CurityPs</small></p>
-				</section>
-				<section>
-					<h2>New-Test -Name 'Example'</h2>
+					<h2>Tests</h2>
+					<h4>Pester</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 function Add($a, $b) { $a + $b }
 function Subtract($a, $b) { $a - $b }
@@ -291,8 +289,13 @@ $calculator.Subtract(2, 1)
 					</code></pre>
 					
 				</section>
-				<section>
-					<h2>PSake</h2>
+				<section>					
+					<h4>PSake</h4>
+					<h4>Compressed folders</h4>
+					<h4>Com interop</h4>
+					<h4>Text templating</h4>
+					<h4>Defining your own function</h4>
+					<h4>Modules, dot sourcing</h4>
 				</section>
 			</div>
 		</div>

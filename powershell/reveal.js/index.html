@@ -7,7 +7,7 @@
 		<title>reveal.js</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,8 +24,276 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>Everybody's Powershell</h1>
+					<h3>Anytime. Anywhere.</h3>
+					<p>
+						<small>Presented by Daniel Brännström</small>
+					</p>
+				</section>
+				<section>
+					<h2>Get-Reason -Verbose</h2>
+					<ul>
+						<li class="fragment">Preinstalled on Windows. Includes an IDE (ISE).</li>
+						<li class="fragment">Supports dotnet</li>				
+						<li class="fragment">Widely spread; Azure, Octopus, Teamcity, Visual Studio, ...</li>
+						<li class="fragment">Available on maxOS and Linux.</li>
+						<li class="fragment">A modern language (not bash &#9786;)</li>
+						<li class="fragment">REPL</li>
+					</ul>					
+				</section>
+				<section>
+				<section>
+					<h2>Azure Powershell</h2>
+					<h4>Basics</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+# Login						
+Login-AzureRmAccount -Subscription 'Collector - Solutions - Dev'
+
+# Create a resource group
+New-AzureRmResourceGroup `
+  -Name 'Group-KompetensLunchPS' `
+  -Location 'West Europe'
+
+# Create a web app
+New-AzureRmWebApp `
+  -Name 'SampleWebApp' `
+  -Location 'West Europe' `
+  -ResourceGroupName 'Group-KompetensLunchPS'
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module AzureRM</small></p>
+				</section>
+				<section>
+					<h2>Azure Powershell</h2>
+					<h4>Adding a table storage</h4>
+					<!--https://docs.microsoft.com/sv-se/azure/storage/tables/table-storage-how-to-use-powershell-->
+					<pre><code class="powershell" data-trim contenteditable>
+# Create a table storage
+$ctx = New-AzureRmStorageAccount `
+  -ResourceGroupName 'Group-KompetensLunchPS' `
+  -Name "stokomplunch" `
+  -Location 'West Europe' `
+  -SkuName Standard_LRS `
+  -Kind Storage | Select-Object Context
+
+New-AzureStorageTable –Name 'SampleTable' –Context $ctx  
+					</code></pre>					
+				</section>
+				<section>
+					<h2>Azure Powershell</h2>
+					<h4>Adding a function app</h4>
+					<!--https://docs.microsoft.com/sv-se/azure/storage/tables/table-storage-how-to-use-powershell-->
+					<pre><code class="powershell" data-trim contenteditable>
+# Create a function app
+New-AzureRmResource `
+    -ResourceType 'Microsoft.Web/Sites' `
+    -ResourceName 'SampleFuncApp' `
+    -ResourceGroupName 'Group-KompetensLunchPS' `
+    -Kind 'functionapp' `
+    -Location 'West Europe' `
+    -Properties @{} `
+    -Force
+
+					</code></pre>					
+				</section>
+				</section>
+				<section>
+					<h2>Language Catch Up</h2>
+					<ul>
+						<li>Commands Uses Verb Noun Pattern</li>
+						<li>Select-Object</li>
+						<li>Pipelining, |</li>
+						<li>Named Parameters, -Name 'stokomplunch'</li>
+						<li>Variables Starts With $</li>
+						<li>Line Break Escaping, `</li>
+					</ul>
+				</section>	
+				<section>
+				<section>
+					<h2>Data manipulation</h2>
+					<h4>Csv to Table Storage</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+# $storageTable = Get-AzureStorageTable –Name "SampleTable" –Context $storageAccount.Context
+
+$csvData = @"
+Id, Name, Company, Age
+1, Sven, Collector, 65
+2, Pelle, Collector, 45
+3, Jessica, SE Banken, 38
+"@
+
+$csvData | ConvertFrom-Csv | ForEach-Object {
+    Add-StorageTableRow `
+        -table $storageTable `
+        -rowKey $_.id `
+        -partitionKey "unused" `
+        -property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }     
+}
+
+# Get-AzureStorageTableRowAll -table $storageTable | ft						
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module AzureRmStorageTable</small></p>				
+				</section>
+				<section>
+					<h2>Data manipulation</h2>
+					<h4>JSON configuration</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+$config = @"
+{
+	"connectionString": "some connection",
+	"instances": 2
+}
+"@ | ConvertFrom-Json
+
+$config.connectionString = "some other connection"
+$config.instances = 1
+
+$config | ConvertTo-Json | Out-File "appsettings.json"
+					</code></pre>
+				</section>
+				<section>
+					<h2>Data manipulation</h2>
+					<h4>XML configuration</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+$config = [xml] @"
+<appsettings>
+    <connectionstring>some connection</connectionstring>
+    <instances count="2"></instances>
+</appsettings>
+"@
+
+$config.appsettings.connectionstring = "some other connection"
+$config.appsettings.instances.count = "1"
+
+$config.Save("appsettings.json")
+					</code></pre>
+				</section>
+				</section>
+				<section>
+					<h2>Language Catch Up</h2>
+					<ul>
+						<li>Here strings, @"..."@</li>
+						<li>Foreach-Object</li>
+						<li>ConvertTo-*</li>
+						<li>ConvertFrom-*</li>
+						<li>Type accelerators, [xml]</li>
+						<li>Out-File</li>
+					</ul>
+				</section>					
+				<section>
+					<h2>Implementing Azure Functions</h2>
+					<!--
+						https://4sysops.com/archives/how-to-write-an-azure-function-in-powershell/ -->
+					<pre><code class="powershell" data-trim contenteditable>
+$requestBody = Get-Content $req -Raw | ConvertFrom-Json
+ 
+# Get request body or query string parameter
+if ($req_query_name) {
+    $name = $req_query_name
+} else {
+    $name = $requestBody.name
+}
+ 
+$response = @{ Message = "Hello $name" } | ConvertTo-Json
+ 
+Out-File -InputObject $response -FilePath $res -Encoding Ascii						
+					</code></pre>
+				</section>					
+				<section>
+				<section>
+					<h2>Calling web apis</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+Invoke-RestMethod ...
+					</code></pre>
+				</section>
+				<section>
+					<h2>Curity</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+$token = Get-CurityToken clientid scope1, scope2
+
+Invoke-RestMethod ... -Headers { Authorization = "Bearer $token "}
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module CurityPS</small></p>					
+				</section>
+				</section>
+
+				<section>
+					<h2>Generate Test Data</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+$template = @"
+{
+   "Name" : "[person]",
+   "Address" : {
+        "Street":"[address]",
+        "State":"[state abbr]"
+    }
+}
+"@
+
+Invoke-Generate $Template -Count 3 | 
+    ForEach-Object { ConvertFrom-Json $_ }
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module NameIT</small></p>
+				</section>
+				<section>
+					<h2>New-Example 'Csv to Sql'</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+$conn = New-Object Data.SqlClient.SqlConnection 'connection string'
+$cmd = $conn.CreateCommand()
+$cmd.CommandText = "INSERT INTO MyTable VALUES (@Name, @Age)"
+
+Import-Csv .\data.csv | Foreach-Object {
+	$cmd.Parameters.Clear()
+	$cmd.Parameters.AddWithValue("@Name",$_.Name)
+	$cmd.Parameters.AddWithValue("@Age",$_.Age)	
+	$cmd.ExecuteNonQuery()
+}
+					</code></pre>
+<!--					<p><small>Prerequisite\> Install-Module SqlServer</small></p>-->
+				</section>
+				<section>
+					<h2>New-Demo 'Curity'</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+Get-CurityToken ...
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module CurityPs</small></p>
+				</section>
+				<section>
+					<h2>New-Test -Name 'Example'</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+function Add($a, $b) { $a + $b }
+function Subtract($a, $b) { $a - $b }
+
+Describe 'My Calculator' {
+    It 'Should Add Numbers' {
+        Add 2 1 | Should Be 3
+    }
+    It 'Should Subtract Numbers' {
+        Add 2 1 | Should Be 1
+    }    
+}
+					</code></pre>
+				</section>
+				<section>
+					<h2>Interop-CSharp</h2>
+					<pre><code class="powershell" data-trim contenteditable>
+Add-Type @"
+public class Calculator
+{
+    public int Add(int a, int b) { return a + b; }
+    public int Subtract(int a, int b) { return a - b; }
+}
+"@
+
+$calculator = [Calculator]::new()
+$calculator.Add(2, 1)
+$calculator.Subtract(2, 1)
+					</code></pre>
+					
+				</section>
+				<section>
+					<h2>PSake</h2>
+				</section>
 			</div>
 		</div>
 
@@ -36,13 +304,20 @@
 			// More info about config & dependencies:
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
+
 			Reveal.initialize({
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'https://cdn.socket.io/socket.io-1.4.5.js', async: true },
+					{ src: 'https://roomy-bar.glitch.me/plugin/another-remote-control.js', async: true }
+	
+				],
+				anotherRemoteControl: {
+					serverUrl: "https://roomy-bar.glitch.me/"
+				}
 			});
 		</script>
 	</body>

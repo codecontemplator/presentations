@@ -57,7 +57,7 @@ New-AzureRmResourceGroup `
 
 # Create a web app
 New-AzureRmWebApp `
-  -Name 'SampleWebApp' `
+  -Name 'web-kompetenslunchps-sample' `
   -Location 'West Europe' `
   -ResourceGroupName 'Group-KompetensLunchPS'
 					</code></pre>
@@ -74,7 +74,7 @@ $ctx = New-AzureRmStorageAccount `
   -Name "stokomplunch" `
   -Location 'West Europe' `
   -SkuName Standard_LRS `
-  -Kind Storage | Select-Object Context
+  -Kind Storage | Select-Object -ExpandProperty Context
 
 New-AzureStorageTable –Name 'SampleTable' –Context $ctx  
 					</code></pre>					
@@ -87,7 +87,7 @@ New-AzureStorageTable –Name 'SampleTable' –Context $ctx
 # Create a function app
 New-AzureRmResource `
     -ResourceType 'Microsoft.Web/Sites' `
-    -ResourceName 'SampleFuncApp' `
+    -ResourceName 'func-kompetenslunchps-sample' `
     -ResourceGroupName 'Group-KompetensLunchPS' `
     -Kind 'functionapp' `
     -Location 'West Europe' `
@@ -113,7 +113,8 @@ New-AzureRmResource `
 					<h2>Data Manipulation</h2>
 					<h4>Csv to Table Storage</h4>
 					<pre><code class="powershell" data-trim contenteditable>
-# $storageTable = Get-AzureStorageTable –Name "SampleTable" –Context $storageAccount.Context
+# $ctx = Get-AzureRmStorageAccount -Name "stokomplunch" -ResourceGroupName "Group-kompetenslunchps" | Select -Expand "Context"
+# $storageTable = Get-AzureStorageTable –Name "SampleTable" –Context $ctx
 
 $csvData = @"
 Id, Name, Company, Age
@@ -130,7 +131,7 @@ $csvData | ConvertFrom-Csv | ForEach-Object {
         -property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }     
 }
 
-# Get-AzureStorageTableRowAll -table $storageTable | ft						
+# Get-AzureStorageTableRowAll -table $storageTable
 					</code></pre>
 					<p><small>Prerequisite\> Install-Module AzureRmStorageTable</small></p>				
 				</section>
@@ -224,24 +225,32 @@ Invoke-Generate $Template -Count 3 |
 						https://4sysops.com/archives/how-to-write-an-azure-function-in-powershell/ -->
 					<pre><code class="powershell" data-trim contenteditable>
 $requestBody = Get-Content $req -Raw | ConvertFrom-Json
- 
-# Get request body or query string parameter
-if ($req_query_name) {
-    $name = $req_query_name
-} else {
-    $name = $requestBody.name
-}
- 
-$response = @{ Message = "Hello $name" } | ConvertTo-Json
- 
-Out-File -InputObject $response -FilePath $res -Encoding Ascii						
+$term1 = $requestBody.term1
+$term2 = $requestBody.term2
+
+$response = @{
+    sum=$term1+$term2
+} | ConvertTo-Json
+
+Out-File -Encoding Ascii -FilePath $res -inputObject $response						
 					</code></pre>
 				</section>					
 				<section>
 					<h2>Web API:s</h2>
-					<h4>Requests & Responses</h4>
+					<h4>Make web calls</h4>
 					<pre><code class="powershell" data-trim contenteditable>
-Invoke-RestMethod ...
+# Enforce tls12
+[Net.ServicePointManager]::SecurityProtocol = 
+    [Net.SecurityProtocolType]::Tls12
+
+# Create json body
+$body = @{ term1=10; term2=20 } | ConvertTo-Json
+
+# Make request
+Invoke-RestMethod `
+  -Uri https://func-kompetenslunchps-sample.azurewebsites.net/api/add `
+  -Method Post `
+  -Body $body
 					</code></pre>
 				</section>
 				<section>
@@ -250,11 +259,19 @@ Invoke-RestMethod ...
 					<pre><code class="powershell" data-trim contenteditable>
 $token = Get-CurityToken clientid scope1, scope2
 
-Invoke-RestMethod ... -Headers { Authorization = "Bearer $token "}
+Invoke-RestMethod ... -Headers @{ Authorization = "Bearer $token" }
 					</code></pre>
 					<p><small>Prerequisite\> Install-Module CurityPS</small></p>					
 				</section>
 				</section>
+				<section>
+					<h2>Language Catch Up</h2>
+					<ul>
+						<li>Hash tables, @{ key=value }</li>
+						<li>Type annotations, [typename]</li>
+						<li>Invoke-RestMethod</li>						
+					</ul>
+				</section>						
 				<section>
 					<h2>Tests</h2>
 					<h4>Pester</h4>

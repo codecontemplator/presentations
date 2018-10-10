@@ -273,21 +273,68 @@ Invoke-RestMethod ... -Headers @{ Authorization = "Bearer $token" }
 					</ul>
 				</section>						
 				<section>
-					<h2>Tests</h2>
-					<h4>Pester</h4>
+				<section>
+					<h2>Scripting<h2>
+					<h4>Functions</h4>
 					<pre><code class="powershell" data-trim contenteditable>
-function Add($a, $b) { $a + $b }
-function Subtract($a, $b) { $a - $b }
+# Define Add
+function Add($a, $b) { return $a + $b }
 
-Describe 'My Calculator' {
+# Invoke Add (positional arguments)
+Add 10 20
+
+# Invoke Add (named arguments)
+Add -a 10 -b 20
+					</code></pre>
+				</section>
+				<section>
+					<h2>Scripting<h2>
+					<h4>Documentation</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+<#
+.SYNOPSIS
+Adds two numbes
+.DESCRIPTION
+Adds two numbers, a and b, and returns the sum.
+.PARAMETER a
+The left term
+.PARAMETER b
+The right term
+.EXAMPLE
+Add 10 20
+#>
+function Add($a, $b) { return $a + $b }
+
+					</code></pre>					
+				</section>
+				<section>
+					<h2>Scripting</h2>
+					<h4>Files</h4>
+					<ul>
+						<li>Powershell script files uses extension <strong>.ps1</strong></li>
+						<li>A script file can be thought of as a set of functions (a utility file)...</li>
+						<li>...or a single function which is named as the file</li>
+						<li>Utility files can be included using <strong>dot sourcing</strong></li>
+					</ul>
+					<pre><code class="powershell" data-trim contenteditable>
+. c:\utilities\calculator.ps1
+. "$psscriptroot\localutils.ps1"
+					</code></pre>										
+				</section>
+				<section>
+					<h2>Scripting</h2>
+					<h4>Tests</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+Describe 'Calculator' {
     It 'Should Add Numbers' {
         Add 2 1 | Should Be 3
     }
     It 'Should Subtract Numbers' {
-        Add 2 1 | Should Be 1
+        Subtract 2 1 | Should Be 1
     }    
 }
 					</code></pre>
+				</section>
 				</section>
 				<section>
 					<h2>Interop-CSharp</h2>

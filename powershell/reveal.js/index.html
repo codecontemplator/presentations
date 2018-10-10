@@ -353,6 +353,26 @@ $calculator.Subtract(2, 1)
 					</code></pre>
 					
 				</section>
+				<section>
+					<h2>Help</h2>
+					<ul>
+						<li><strong>Get-Help</strong> shows command documentaion</li>
+						<li><strong>Get-Command</strong> searches registered commands</li>
+					</ul>
+					<pre><code class="powershell" data-trim contenteditable>
+# Basic help
+Get-Help Invoke-RestMethod
+
+# Show examples
+Get-Help Invoke-RestMethod -Examples
+
+# Find commands matching a naming pattern
+Get-Command *Test*
+
+# Find all commands acting on a specific noun
+Get-Command -Noun AzureRmWebApp
+					</code></pre>
+				</section>
 				<section>					
 					<h4>PSake</h4>
 					<h4>Compressed folders</h4>

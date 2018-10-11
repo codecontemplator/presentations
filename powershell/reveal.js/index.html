@@ -32,19 +32,48 @@
 					</p>
 				</section>
 				<section>
-					<p><strong>PowerShell<strong> is both a <em>command-line shell</em> and <em>scripting language</em></p>
+					<p><strong>PowerShell</strong> is both a</p>
+					<p><em>command-line shell</em></p>
+					<p>and a</p>
+					<p><em>scripting language</em></p>
+					<aside class="notes">
+						What is powershell anyway?
+					</aside>				
+				</section>
+				<section>
+					<h2>Why scripting matters</h2>
+					<ul>
+						<li class="fragment">Automation</li>
+						<li class="fragment">Save Time</li>
+						<li class="fragment">Consistency</li>
+						<li class="fragment">Up-to-date Documentation</li>
+					</ul>									
+					<aside class="notes">
+						<ul>
+							<li>People sucks at repetitive tasks. Machines excels.</li>
+							<li>Example from real life, Mårten; parsing customer data sheet</li>
+						</ul>
+					</aside>				
 				</section>
 				<section>
 					<!--http://ramblingcookiemonster.github.io/Why-PowerShell/-->
 					<h2>Why Powershell matters</h2>
 					<ul>
-						<li class="fragment">Preinstalled on Windows. Includes an IDE (ISE).</li>
-						<li class="fragment">Supports dotnet</li>				
-						<li class="fragment">Widely spread; Azure, Octopus, Teamcity, Visual Studio, ...</li>
-						<li class="fragment">Available on maxOS and Linux.</li>
+						<li class="fragment">Preinstalled on Windows</li>
+						<li class="fragment">Supports dotnet</li>	
+						<li class="fragment">Wide support</li>	
 						<li class="fragment">A modern language (not bash &#9786;)</li>
 						<li class="fragment">REPL</li>
-					</ul>					
+						<li class="fragment">Available on macOS and Linux</li>
+					</ul>	
+					<aside class="notes">
+						<ul>
+							<li>Powershell is like the air on the windows platform. Its everywhere. And if you can breath it, 
+							it is convenient.</li>
+							<li>Wide support goes two ways; in one way powershell prompts and windows tends to pop up everywhere. 
+							In another way, powershell supports a wide range, almost infinite, of technologies.</li>
+						</ul>						
+					</aside>				
 				</section>
 				<section>
 				<section>
@@ -278,7 +307,7 @@ Invoke-RestMethod ... -Headers @{ Authorization = "Bearer $token" }
 				</section>						
 				<section>
 				<section>
-					<h2>Scripting<h2>
+					<h2>Code Structure</h2>
 					<h4>Functions</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 # Define Add
@@ -292,7 +321,7 @@ Add -a 10 -b 20
 					</code></pre>
 				</section>
 				<section>
-					<h2>Scripting<h2>
+					<h2>Code Structure</h2>
 					<h4>Documentation</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 <#
@@ -312,13 +341,13 @@ function Add($a, $b) { return $a + $b }
 					</code></pre>					
 				</section>
 				<section>
-					<h2>Scripting</h2>
-					<h4>Files</h4>
+					<h2>Code Structure</h2>
+					<h4>Script Files</h4>
 					<ul>
-						<li>Powershell script files uses extension <strong>.ps1</strong></li>
+						<li>Powershell script files uses extension <em>.ps1</em></li>
 						<li>A script file can be thought of as a set of functions (a utility file)...</li>
 						<li>...or a single function which is named as the file</li>
-						<li>Utility files can be included using <strong>dot sourcing</strong></li>
+						<li>Utility files can be included using <em>dot sourcing</em></li>
 					</ul>
 					<pre><code class="powershell" data-trim contenteditable>
 . c:\utilities\calculator.ps1
@@ -326,7 +355,7 @@ function Add($a, $b) { return $a + $b }
 					</code></pre>										
 				</section>
 				<section>
-					<h2>Scripting</h2>
+					<h2>Code Structure</h2>
 					<h4>Tests</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 Describe 'Calculator' {
@@ -339,9 +368,21 @@ Describe 'Calculator' {
 }
 					</code></pre>
 				</section>
+				<section>
+					<h2>Code Structure</h2>
+					<h4>Modules</h4>
+					<ul>
+						<li>Modules can be either script modules or compiled code</li>
+						<li>Script modules uses the <em>.psm1</em> file extension</li>
+						<li>Import-Module commad imports a module</li>
+						<li>Modules can be published to a central repository such as myget or powershell gallery</li>
+					</ul>
+				</section>
 				</section>
 				<section>
-					<h2>Interop-CSharp</h2>
+				<section>
+					<h2>Tips and Tricks</h2>
+					<h4>CSharp Interop</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 Add-Type @"
 public class Calculator
@@ -354,20 +395,22 @@ public class Calculator
 $calculator = [Calculator]::new()
 $calculator.Add(2, 1)
 $calculator.Subtract(2, 1)
-					</code></pre>
-					
+					</code></pre>					
 				</section>
 				<section>
-					<h2>Help</h2>
-					<ul>
-						<li><strong>Get-Help</strong> shows command documentaion</li>
-						<li><strong>Get-Command</strong> searches registered commands</li>
-					</ul>
+					<h2>Tips and Tricks</h2>
+					<p>PSake, Compressed folders</p>
+				</section>
+				</section>
+				<section>
+				<section>
+					<h2>Learning more</h2>
+					<h4>Built in help</h4>
 					<pre><code class="powershell" data-trim contenteditable>
-# Basic help
+# Show basic help
 Get-Help Invoke-RestMethod
 
-# Show examples
+# Show example usage for a command
 Get-Help Invoke-RestMethod -Examples
 
 # Find commands matching a naming pattern
@@ -375,16 +418,21 @@ Get-Command *Test*
 
 # Find all commands acting on a specific noun
 Get-Command -Noun AzureRmWebApp
+
+# Show properties and methods for an object
+Get-Member $myobject
 					</code></pre>
 				</section>
-				<section>					
-					<h4>PSake</h4>
-					<h4>Compressed folders</h4>
-					<h4>Com interop</h4>
-					<h4>Text templating</h4>
-					<h4>Defining your own function</h4>
-					<h4>Modules, dot sourcing</h4>
-					<h4>Elastic</h4>
+				<section>
+					<h2>Learning more</h2>
+					<h4>Resources</h4>
+					<ul>
+						<li>Stack Overflow - as always</li>
+						<li>powershell.com</li>
+						<li>Doug Finke, https://dfinke.github.io/</li>
+						<li>Hey, Scripting Guy! https://blogs.technet.microsoft.com/heyscriptingguy/</li>
+					</ul>
+				</section>
 				</section>
 			</div>
 		</div>

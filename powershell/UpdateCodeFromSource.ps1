@@ -20,17 +20,26 @@ foreach($mymatch in $mymatches)
 }
 #>
 
-$xs = [regex]::Matches($s, "(?smi)<h2>(.+?)</h2>(.*?)<h4>(.+?)</h4>(.*?)<code.*?>(.*?)</code>")
-
+#$xs = [regex]::Matches($s, "(?smi)<h2>(.+?)</h2>(.*?)<h4>(.+?)</h4>(.*?)(?:<code.*?>(.*?)</code>|</section>)")
+#$xs = [regex]::Matches($s, "(?smi)<h2>(.+?)</h2>.*?(?:<h4>(.+?)</h4>)?.*?(?:<code.*?>(.*?)</code>|</section>)")
+$xs = [regex]::Matches($s,"(?smi)<h2>(.+?)</h2>.*?(?:<code.*?>(.*?)</code>|</section>)")
 cd code
 foreach($x in $xs)
 {
     $h2 = $x.Groups[1].Value
-    $h4 = $x.Groups[3].Value
-    $code = $x.Groups[5].Value
-    $file = "$h2 - $h4.ps1".ToLower().Replace(":","")
-    Write-Host $file
-    $code | Out-File $file -Encoding utf8
+    if ($x.Groups[2].Success)
+    {
+        $code = $x.Groups[2].Value
+        $h4m = [regex]::Match($x.Groups[0].Value, "<h4>(.+?)</h4>")
+        $h4 = $h4m.Groups[1].Value
+        $file = "$h2 - $h4.ps1".ToLower().Replace(":","")
+        Write-Host $file
+        $code | Out-File $file -Encoding utf8
+    }
+    else
+    {
+        Write-Host "Ignored $h2"
+    }
 }
 
 

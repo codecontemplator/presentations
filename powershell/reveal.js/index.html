@@ -146,17 +146,78 @@ New-AzureRmResource `
 					</code></pre>					
 				</section>
 				</section>
+
 				<section>
 					<h2>Language Catch Up</h2>
 					<ul>
-						<li>Commands Uses Verb Noun Pattern</li>
+						<li>Commands uses a Verb Noun pattern</li>
 						<li>Select-Object</li>
 						<li>Pipelining, |</li>
-						<li>Named Parameters, -Name 'stokomplunch'</li>
-						<li>Variables Starts With $</li>
-						<li>Line Break Escaping, `</li>
+						<li>Named parameters, -paramname paramvalue</li>
+						<li>Variables starts with $</li>
+						<li>Line break escaping, `</li>
 					</ul>
 				</section>	
+				
+				<section>			
+				<section>
+					<h2>Web API:s</h2>
+					<h4>Implementing Azure Functions</h4>
+					<!--
+						https://4sysops.com/archives/how-to-write-an-azure-function-in-powershell/ -->
+					<pre><code class="powershell" data-trim contenteditable>
+$requestBody = Get-Content $req -Raw | ConvertFrom-Json
+$term1 = $requestBody.term1
+$term2 = $requestBody.term2
+
+$response = @{
+    sum=$term1+$term2
+} | ConvertTo-Json
+
+Out-File -Encoding Ascii -FilePath $res -inputObject $response
+					</code></pre>
+				</section>					
+				<section>
+					<h2>Web API:s</h2>
+					<h4>Make web calls</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+# Enforce tls12
+[Net.ServicePointManager]::SecurityProtocol = 
+    [Net.SecurityProtocolType]::Tls12
+
+# Create json body
+$body = @{ term1=10; term2=20 } | ConvertTo-Json
+
+# Make request
+Invoke-RestMethod `
+ -Uri https://func-kompetenslunchps-sample.azurewebsites.net/api/add `
+ -Method Post `
+ -Body $body
+					</code></pre>
+				</section>
+				<section>
+					<h2>Web API:s</h2>
+					<h4>Curity</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+$token = Get-CurityToken clientid scope1, scope2
+
+Invoke-RestMethod ... -Headers @{ Authorization = "Bearer $token" }
+					</code></pre>
+					<p><small>Prerequisite\> Install-Module CurityPS</small></p>					
+				</section>
+				</section>
+
+				<section>
+					<h2>Language Catch Up</h2>
+					<ul>
+						<li>Hash tables, @{ key=value }</li>
+						<li>Type annotations, [typename]</li>
+						<li>Get-Content</li>
+						<li>Out-File</li>						
+						<li>Invoke-RestMethod</li>
+					</ul>
+				</section>						
+
 				<section>
 				<section>
 					<h2>Data Manipulation</h2>
@@ -250,6 +311,7 @@ Invoke-Generate $Template -Count 3 |
 					<p><small>Prerequisite\> Install-Module NameIT</small></p>
 				</section>				
 				</section>
+
 				<section>
 					<h2>Language Catch Up</h2>
 					<ul>
@@ -257,65 +319,9 @@ Invoke-Generate $Template -Count 3 |
 						<li>Foreach-Object</li>
 						<li>New-Object</li>
 						<li>ConvertTo-*, ConvertFrom-*, Import-*</li>
-						<li>Type accelerators, [xml]</li>
-						<li>Out-File</li>
 					</ul>
 				</section>		
-				<section>			
-				<section>
-					<h2>Web API:s</h2>
-					<h4>Implementing Azure Functions</h4>
-					<!--
-						https://4sysops.com/archives/how-to-write-an-azure-function-in-powershell/ -->
-					<pre><code class="powershell" data-trim contenteditable>
-$requestBody = Get-Content $req -Raw | ConvertFrom-Json
-$term1 = $requestBody.term1
-$term2 = $requestBody.term2
 
-$response = @{
-    sum=$term1+$term2
-} | ConvertTo-Json
-
-Out-File -Encoding Ascii -FilePath $res -inputObject $response
-					</code></pre>
-				</section>					
-				<section>
-					<h2>Web API:s</h2>
-					<h4>Make web calls</h4>
-					<pre><code class="powershell" data-trim contenteditable>
-# Enforce tls12
-[Net.ServicePointManager]::SecurityProtocol = 
-    [Net.SecurityProtocolType]::Tls12
-
-# Create json body
-$body = @{ term1=10; term2=20 } | ConvertTo-Json
-
-# Make request
-Invoke-RestMethod `
- -Uri https://func-kompetenslunchps-sample.azurewebsites.net/api/add `
- -Method Post `
- -Body $body
-					</code></pre>
-				</section>
-				<section>
-					<h2>Web API:s</h2>
-					<h4>Curity</h4>
-					<pre><code class="powershell" data-trim contenteditable>
-$token = Get-CurityToken clientid scope1, scope2
-
-Invoke-RestMethod ... -Headers @{ Authorization = "Bearer $token" }
-					</code></pre>
-					<p><small>Prerequisite\> Install-Module CurityPS</small></p>					
-				</section>
-				</section>
-				<section>
-					<h2>Language Catch Up</h2>
-					<ul>
-						<li>Hash tables, @{ key=value }</li>
-						<li>Type annotations, [typename]</li>
-						<li>Invoke-RestMethod</li>						
-					</ul>
-				</section>						
 				<section>
 				<section>
 					<h2>Code Structure</h2>

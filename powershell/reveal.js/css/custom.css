@@ -1,0 +1,11 @@
+/* copied from: https://www.w3schools.com/howto/howto_css_two_columns.asp */
+.column {
+    float: left;
+    width: 50%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

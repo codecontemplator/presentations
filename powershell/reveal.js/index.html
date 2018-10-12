@@ -12,6 +12,8 @@
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
 
+		<link rel="stylesheet" href="css/custom.css">
+
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
@@ -428,7 +430,29 @@ j myfo sub
 				</section>
 				<section>
 					<h2>Tips and Tricks</h2>
-					<p>PSake, Compressed folders, ISE project explorer, regex, Set-ExecutionPolicy, out-gridview</p>
+					<h4>Out-GridView</h4>
+					<pre><code class="powershell" data-trim contenteditable>Get-Process | Out-GridView</code></pre>									
+					<img src="/images/out-gridview.png">							
+				</section>
+				<section>
+					<h2>Tips and Tricks</h2>
+					<h4>psake</h4>
+					<pre><code class="powershell" data-trim contenteditable>
+task default -depends Test
+
+task Test -depends Compile, Clean {
+  "Testing"
+}
+
+task Compile -depends Clean {
+  "Compiling"
+}
+
+task Clean {
+  "Cleaning"
+}
+					</code></pre>					
+					<p><small>Prerequisite\> Install-Module psake</small></p>
 				</section>
 				</section>
 				<section>
@@ -467,6 +491,10 @@ Get-Member -InputObject "a sample string object"
 					<p>If you learn to breath it, </p>
 					<p><em>It becomes essential</em>.</li>					
 				</section>
+
+				<!--
+					Compressed folders, ISE project explorer, regex, Set-ExecutionPolicy, out-gridview</p>					
+				-->
 			</div>
 		</div>
 

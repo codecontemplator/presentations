@@ -7,7 +7,7 @@ public class Calculator
 }
 "@
 
-$calculator = [Calculator]::new()
+$calculator = New-Object Calculator
 $calculator.Add(2, 1)
 $calculator.Subtract(2, 1)
 					

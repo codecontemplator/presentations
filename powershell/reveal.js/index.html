@@ -391,7 +391,7 @@ Describe 'Calculator' {
 				<section>
 				<section>
 					<h2>Tips and Tricks</h2>
-					<h4>CSharp Interop Set-ExecutionPolicy</h4>
+					<h4>CSharp Interop</h4>
 					<pre><code class="powershell" data-trim contenteditable>
 Add-Type @"
 public class Calculator
@@ -401,7 +401,7 @@ public class Calculator
 }
 "@
 
-$calculator = [Calculator]::new()
+$calculator = New-Object Calculator
 $calculator.Add(2, 1)
 $calculator.Subtract(2, 1)
 					</code></pre>					
@@ -424,7 +424,7 @@ j myfolder subfolder
 				</section>
 				<section>
 					<h2>Tips and Tricks</h2>
-					<p>PSake, Compressed folders, ISE project explorer, regex</p>
+					<p>PSake, Compressed folders, ISE project explorer, regex, Set-ExecutionPolicy</p>
 				</section>
 				</section>
 				<section>

@@ -146,9 +146,6 @@ New-AzureRmResource `
 					<h2>Data Manipulation</h2>
 					<h4>Csv to Table Storage</h4>
 					<pre><code class="powershell" data-trim contenteditable>
-# $ctx = Get-AzureRmStorageAccount -Name "stokomplunch" -ResourceGroupName "Group-kompetenslunchps" | Select -Expand "Context"
-# $storageTable = Get-AzureStorageTable –Name "SampleTable" –Context $ctx
-
 $csvData = @"
 Id, Name, Company, Age
 1, Sven, Collector, 65
@@ -163,8 +160,6 @@ $csvData | ConvertFrom-Csv | ForEach-Object {
         -partitionKey "unused" `
         -property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }     
 }
-
-# Get-AzureStorageTableRowAll -table $storageTable
 					</code></pre>
 					<p><small>Prerequisite\> Install-Module AzureRmStorageTable</small></p>				
 				</section>
@@ -399,7 +394,7 @@ $calculator.Subtract(2, 1)
 				</section>
 				<section>
 					<h2>Tips and Tricks</h2>
-					<p>PSake, Compressed folders</p>
+					<p>PSake, Compressed folders, Jump-Location</p>
 				</section>
 				</section>
 				<section>

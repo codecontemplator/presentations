@@ -34,7 +34,26 @@ foreach($x in $xs)
         $h4 = $h4m.Groups[1].Value
         $file = "$h2 - $h4.ps1".ToLower().Replace(":","")
         Write-Host $file
-        $code | Out-File $file -Encoding utf8
+        if (Test-Path $file) 
+        {
+            $content = Get-Content $file -Raw
+            $pattern = "(?smi)(.*?#\s*<-).+?(#\s*->.*)"
+            if ($content -match $pattern)
+            {
+                Write-Host "Smart replace"
+                Write-Host $Matches
+                $newcontent = $Matches[1] + [Environment]::NewLine + $code + [Environment]::NewLine + $Matches[2]
+                $newcontent | Out-File $file -Encoding utf8
+            }
+            else
+            {
+                $code | Out-File $file -Encoding utf8
+            }
+        }
+        else
+        {
+            $code | Out-File $file -Encoding utf8
+        }
     }
     else
     {

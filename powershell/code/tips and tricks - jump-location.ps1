@@ -5,6 +5,6 @@ Jump-Location myfolder
 # Navigate to a subfolder named 'subfolder' of 'myfolder'
 Jump-Location myfolder subfolder
 
-# Using alias for Jump-Location 
-j myfolder subfolder
+# Using alias for Jump-Location and abbreviated names
+j myfo sub
 					

@@ -409,7 +409,6 @@ $calculator.Subtract(2, 1)
 				<section>
 					<h2>Tips and Tricks</h2>
 					<h4>Jump-Location</h4>
-					<p>Quickly navigate to commonly used folders</p>
 					<pre><code class="powershell" data-trim contenteditable>
 # Navigate to most commonly used folder named 'myfolder'
 Jump-Location myfolder
@@ -417,10 +416,15 @@ Jump-Location myfolder
 # Navigate to a subfolder named 'subfolder' of 'myfolder'
 Jump-Location myfolder subfolder
 
-# Using alias for Jump-Location 
-j myfolder subfolder
-					</code></pre>	
-					<p><small>Prerequisite\> Install-Module Jump.Location; &lt;modulepath&gt;\Jump.Location\&lt;version&gt;\install.ps1</small></p>
+# Using alias for Jump-Location and abbreviated names
+j myfo sub
+					</code></pre>		
+					<small>
+						<ul style="list-style: none; margin-top:">
+							<li>Prerequisite\> Install-Module Jump.Location;</li>
+					        <li>Prerequisite\> &lt;modulepath&gt;\Jump.Location\&lt;version&gt;\install.ps1</li>
+					    </ul>
+				    </small>
 				</section>
 				<section>
 					<h2>Tips and Tricks</h2>
@@ -445,7 +449,7 @@ Get-Command *Test*
 Get-Command -Noun AzureRmWebApp
 
 # Show properties and methods for an object
-Get-Member $myobject
+Get-Member -InputObject "a sample string object"
 					</code></pre>
 				</section>
 				<section>

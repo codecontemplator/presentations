@@ -12,5 +12,5 @@ Get-Command *Test*
 Get-Command -Noun AzureRmWebApp
 
 # Show properties and methods for an object
-Get-Member $myobject
+Get-Member -InputObject "a sample string object"
 					

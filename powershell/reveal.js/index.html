@@ -95,6 +95,16 @@ New-AzureRmWebApp `
   -ResourceGroupName 'Group-KompetensLunchPS'
 					</code></pre>
 					<p><small>Prerequisite\> Install-Module AzureRM</small></p>
+					<aside class="notes">
+						<ul>
+							<li>An example of a common task at collector</li>
+							<li>The first thing to note; we can read it without knowing powershell</li>
+							<li>Examine the statments in detal</li>
+							<li>Verb noun pattern</li>
+							<li>Commands</li>
+							<li>Named parameters</li>
+						</ul>
+					</aside>				
 				</section>
 				<section>
 					<h2>Azure Powershell</h2>
@@ -103,14 +113,19 @@ New-AzureRmWebApp `
 					<pre><code class="powershell" data-trim contenteditable>
 # Create a table storage
 $ctx = New-AzureRmStorageAccount `
-  -ResourceGroupName 'Group-KompetensLunchPS' `
+  -Kind Storage `
   -Name "stokomplunch" `
+  -ResourceGroupName 'Group-KompetensLunchPS' `
   -Location 'West Europe' `
-  -SkuName Standard_LRS `
-  -Kind Storage | Select-Object -ExpandProperty Context
+  -SkuName Standard_LRS | Select-Object -ExpandProperty Context
 
 New-AzureStorageTable –Name 'SampleTable' –Context $ctx  
-					</code></pre>					
+					</code></pre>	
+					<aside class="notes">
+						<ul>
+							<li>Standard_LRS Standard Locally Redundant Storage</li>
+						</ul>
+					</aside>				
 				</section>
 				<section>
 					<h2>Azure Powershell</h2>
@@ -120,13 +135,12 @@ New-AzureStorageTable –Name 'SampleTable' –Context $ctx
 # Create a function app
 New-AzureRmResource `
     -ResourceType 'Microsoft.Web/Sites' `
+    -Kind 'functionapp' `
     -ResourceName 'func-kompetenslunchps-sample' `
     -ResourceGroupName 'Group-KompetensLunchPS' `
-    -Kind 'functionapp' `
     -Location 'West Europe' `
     -Properties @{} `
     -Force
-
 					</code></pre>					
 				</section>
 				</section>
@@ -155,10 +169,10 @@ Id, Name, Company, Age
 
 $csvData | ConvertFrom-Csv | ForEach-Object {
     Add-StorageTableRow `
-        -table $storageTable `
-        -rowKey $_.id `
-        -partitionKey "unused" `
-        -property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }     
+        -Table $storageTable `
+        -RowKey $_.id `
+        -PartitionKey "unused" `
+        -Property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }
 }
 					</code></pre>
 					<p><small>Prerequisite\> Install-Module AzureRmStorageTable</small></p>				
@@ -260,7 +274,7 @@ $response = @{
     sum=$term1+$term2
 } | ConvertTo-Json
 
-Out-File -Encoding Ascii -FilePath $res -inputObject $response						
+Out-File -Encoding Ascii -FilePath $res -inputObject $response
 					</code></pre>
 				</section>					
 				<section>
@@ -276,9 +290,9 @@ $body = @{ term1=10; term2=20 } | ConvertTo-Json
 
 # Make request
 Invoke-RestMethod `
-  -Uri https://func-kompetenslunchps-sample.azurewebsites.net/api/add `
-  -Method Post `
-  -Body $body
+ -Uri https://func-kompetenslunchps-sample.azurewebsites.net/api/add `
+ -Method Post `
+ -Body $body
 					</code></pre>
 				</section>
 				<section>

@@ -13,15 +13,16 @@ Id, Name, Company, Age
 
 $csvData | ConvertFrom-Csv | ForEach-Object {
     Add-StorageTableRow `
-        -table $storageTable `
-        -rowKey $_.id `
-        -partitionKey "unused" `
-        -property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }     
+        -Table $storageTable `
+        -RowKey $_.id `
+        -PartitionKey "unused" `
+        -Property @{ Name=$_.Name; Company=$_.Company; Age=$_.Age }
 }
 					
 # ->
 
 Get-AzureStorageTableRowAll -table $storageTable | Format-Table Name, Age, Company
 					
+
 
 

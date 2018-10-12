@@ -62,8 +62,8 @@
 						<li class="fragment">Preinstalled on Windows</li>
 						<li class="fragment">Supports dotnet</li>	
 						<li class="fragment">Wide support</li>	
-						<li class="fragment">A modern language (not bash &#9786;)</li>
-						<li class="fragment">REPL</li>
+						<li class="fragment">A modern language</li>
+						<li class="fragment">REPL + Debugger = &#x2764;</li>
 						<li class="fragment">Available on macOS and Linux</li>
 					</ul>	
 					<aside class="notes">
@@ -394,7 +394,23 @@ $calculator.Subtract(2, 1)
 				</section>
 				<section>
 					<h2>Tips and Tricks</h2>
-					<p>PSake, Compressed folders, Jump-Location</p>
+					<h4>Jump-Location</h4>
+					<p>Quickly navigate to commonly used folders</p>
+					<pre><code class="powershell" data-trim contenteditable>
+# Navigate to most commonly used folder named 'myfolder'
+Jump-Location myfolder
+
+# Navigate to a subfolder named 'subfolder' of 'myfolder'
+Jump-Location myfolder subfolder
+
+# Using alias for Jump-Location 
+j myfolder subfolder
+					</code></pre>	
+					<p><small>Prerequisite\> Install-Module Jump.Location; &lt;modulepath&gt;\Jump.Location\&lt;version&gt;\install.ps1</small></p>
+				</section>
+				<section>
+					<h2>Tips and Tricks</h2>
+					<p>PSake, Compressed folders, ISE project explorer, regex</p>
 				</section>
 				</section>
 				<section>

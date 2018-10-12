@@ -21,6 +21,7 @@ $csvData | ConvertFrom-Csv | ForEach-Object {
 					
 # ->
 
-Get-AzureStorageTableRowAll -table $storageTable
+Get-AzureStorageTableRowAll -table $storageTable | Format-Table Name, Age, Company
 					
+
 

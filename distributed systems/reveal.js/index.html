@@ -24,8 +24,77 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>Distributed Systems</h1>
+					<h3>Transactions & Eventual Consistency</h3>
+					<p>
+						<small>Created by Daniel Brännström</small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Transactions</h2>
+					<h4>Database Example</h4>
+					<pre><code class="sql" data-trim contenteditable>
+BEGIN TRANSACTION;  
+  UPDATE Customers 
+  SET ContactName='Alfred Schmidt' 
+  WHERE CustomerID=1;
+  
+  UPDATE Customers 
+  SET ContactName='Arne Svensson' 
+  WHERE CustomerID=2;
+COMMIT;
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Transactions</h2>
+					<h4>A pink and fluffy world with rainbows</h4>
+					<ul style="list-style-type: none">
+						<li><span style="color:pink"><strong>A</strong>tomicity</span> - <i>is an all-or-none</i></li>
+						<li><span style="color:pink"><strong>C</strong>onsistency</span> - <i>always a valid state</i></li>
+						<li><span style="color:pink"><strong>I</strong>solation</span>   - <i>transactions are indenpendent</i></li>
+						<li><span style="color:pink"><strong>D</strong>urability</span> - <i>committed data is never lost</i></li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Distributed Transactions</h2>
+					<h4>Involving more than a database</h4>
+					<pre><code class="csharp" data-trim contenteditable data-noescape>
+<span class="fragment" data-fragment-index="2">using (var txScope = new TransactionScope()) {</span>
+<span class="fragment" data-fragment-index="1">  // Access database
+  var payment = _dataContext.Payments.First(x => x.Id == args.Id);
+  payment.BookingDate = args.BookingDate;
+  await _dataContext.SaveChangesAsync();
+  // Access service bus
+  await _eventPublisher.Publish(PaymentEvent.Create(payment);
+<span class="fragment" data-fragment-index="2">  // Commit
+  txScope.Commit();
+}</span>  
+</span>
+					</code></pre>
+				</section>
+
+				<section>
+					<p>
+						<span class="fragment">Soo...</span>
+					    <span class="fragment">this was everything we wished for...</span>
+						<span class="fragment">right?</span>
+					</p>
+					<p>
+						<span class="fragment">But what about...</span>
+						<span class="fragment" style="color:red"><strong>performance?</strong></span>
+					</p>
+				</section>
+
+				<section>
+					<h2>Database Transactions</h2>
+					<h4>Isolation Levels</h4>
+					<p>No more rainbows. No more pink fluff.</p>
+					<img src="/images/isolation-level-stacked.png">											
+				</section>				
 			</div>
 		</div>
 

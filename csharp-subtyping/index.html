@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# C#, Subtypes, Covariance and Contravariance
+
+<img src="question.PNG" width="100%" />
+
+---
+
+# Subtyping / subclasses / inheritance
+
+```csharp
+abstract class Animal
+{
+    public abstract void MakeSound();
+}
+
+class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("wouff!");
+    }
+}
+
+class Cat : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("mrrrrrrrrrrawr!");
+    }
+}
+```
+
+---
+
+# Semantics
+
+Anywhere in our code we can replace Animal with Cat or Dog without messing up our program.
+
+> “if **S** is a *subtype* of **T**, then objects of type **T** may be *replaced* with objects of type **S** 
+> ... without altering any of the desirable properties of the program (correctness, task performed, etc.)” <br/><br/>
+> *Liskov substitution principle, Barbara Liskov*
+
+
+<br/>
+
+A cat *is an* animal. A dog *is an* animal.
+
+> “Inheritance is *IS-A* type of relationship... where the derived classes are specialized versions of the base class”
+
+
+---
+
+# Simple right?
+
+```csharp
+class Fox : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("???");
+    }
+}
+```
+
+---
+
+# Seriously?
+
+```csharp
+class Rectangle
+{
+    protected double width;
+    protected double height;
+
+    public virtual void SetSize(double width, double height)
+    {
+        this.width = width; this.height = height:
+    }
+}
+
+class Square : Rectangle
+{
+    public override void SetSize(double width, double height)
+    {
+        // ????
+    }
+}
+```
+
+---
+
+# Why just one base class? - Ambiguity
+
+```csharp
+class A 
+{ 
+    public void DoStuff() 
+    {
+        Console.WriteLine("A");
+    }
+}
+
+class B 
+{ 
+    public void DoStuff() 
+    {
+        Console.WriteLine("B");
+    }
+}
+
+class X : A, B 
+{
+
+}
+
+var x = new X();
+x.DoStuff() ???
+```
+
+---
+
+# Why just one base class? - The diamond problem
+
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M109.84 167.51L215.98 167.51L215.98 263.04L109.84 263.04L109.84 167.51Z" id="g1J3geptL4"></path><text id="a1wTQr9oDL" x="140.27" y="201.48" font-size="29" font-family="Open Sans" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 13.463392624869954 -5.701873048907402)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="140.27" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">B1</tspan></text><path d="M278.35 167.51L384.48 167.51L384.48 263.04L278.35 263.04L278.35 167.51Z" id="d1oJdZXE9"></path><text id="f3NvE6v2TS" x="140.27" y="201.48" font-size="29" font-family="Open Sans" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 181.9649534989594 -8.438605619146728)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="140.27" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">B2</tspan></text><path d="M199.09 35.29L305.23 35.29L305.23 130.81L199.09 130.81L199.09 35.29Z" id="c2h797zB1p"></path><text id="b3isS7a6cf" x="140.27" y="201.48" font-size="29" font-family="Open Sans" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 102.71417306191472 -137.92872008324662)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="140.27" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">A</tspan></text><path d="M201.31 314.17L307.45 314.17L307.45 409.7L201.31 409.7L201.31 314.17Z" id="bmz5sUVpy"></path><text id="b1c16VJtDW" x="140.27" y="201.48" font-size="29" font-family="Open Sans" font-weight="normal" font-style="normal" letter-spacing="0" alignment-baseline="before-edge" transform="matrix(1 0 0 1 104.93061426899067 140.95785639958376)" style="line-height:100%" xml:space="preserve" dominant-baseline="text-before-edge"><tspan x="140.27" dy="0em" alignment-baseline="before-edge" dominant-baseline="text-before-edge" text-anchor="start">C</tspan></text><path d="M162.91 263.04L257.02 314.17L162.91 263.04Z" id="bfhzphxYI"></path><path d="M257.02 312.57L336.27 263.04" id="apXEUdWCb"></path><path d="M336.27 167.51L247.83 130.81L159.38 167.51" id="i4Cb0jgKSe"></path><path d="M177.77 263.04L165.04 274.36L161.5 263.04L177.77 263.04Z" id="b11gcbdGON"></path><path d="M331.42 274.36L317.88 263.04L336.27 263.04L331.42 274.36Z" id="d1UxNSZV7q"></path><path d="M240.75 141.33L232.97 130.81L247.83 130.81L240.75 141.33Z" id="buMRQTZ"></path><path d="M263.5 130.81L254.35 141.33L247.83 130.81L263.5 130.81Z" id="b4c6peLetU"></path></defs><g><g><g><use xlink:href="#g1J3geptL4" opacity="1" fill="#59a36b" fill-opacity="1"></use></g><g id="b1v8X3SQfw"><use xlink:href="#a1wTQr9oDL" opacity="1" fill="#030303" fill-opacity="1"></use></g><g><use xlink:href="#d1oJdZXE9" opacity="1" fill="#59a36b" fill-opacity="1"></use></g><g id="n1CkXA8789"><use xlink:href="#f3NvE6v2TS" opacity="1" fill="#030303" fill-opacity="1"></use></g><g><use xlink:href="#c2h797zB1p" opacity="1" fill="#59a36b" fill-opacity="1"></use></g><g id="aNq0KjuSS"><use xlink:href="#b3isS7a6cf" opacity="1" fill="#030303" fill-opacity="1"></use></g><g><use xlink:href="#bmz5sUVpy" opacity="1" fill="#59a36b" fill-opacity="1"></use></g><g id="aerBcLOoU"><use xlink:href="#b1c16VJtDW" opacity="1" fill="#030303" fill-opacity="1"></use></g><g><g><use xlink:href="#bfhzphxYI" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#apXEUdWCb" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#i4Cb0jgKSe" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#b11gcbdGON" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#d1UxNSZV7q" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#buMRQTZ" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#b4c6peLetU" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg>
+
+---
+
+# How does subtyping affect complex types?
+
+## Generic functions
+
+```csharp
+    
+```
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

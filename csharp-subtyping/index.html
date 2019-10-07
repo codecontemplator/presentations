@@ -26,6 +26,54 @@ class: center, middle
 <img src="question.PNG" width="100%" />
 
 ---
+# Sub typing, simple types
+
+```csharp
+
+class Generic { }
+class Derived : Generic { }
+class MoreDerived : Derived { }
+
+Generic x = new Derived();
+Generic y = new MoreDerived();
+
+```
+
+---
+
+# Sub typing, generic functions
+```csharp
+
+// Assume we have this function type
+Func<Derived, Derived> f;
+
+// Which one compiles?
+Func<Derived, MoreDerived> g1 = f;
+Func<Generic, Derived>     g2 = f;
+Func<MoreDerived, Generic> g3 = f;
+
+// Original signature
+Derived f(Derived arg) { return arg; }
+
+// We do not know that the Dervived instances of f are instances of MoreDerived
+MoreDerived g1(Derived arg) { return f(arg); }
+
+// We cannot safely assume that Argument is an instance of Derived. We only specified that we need a generic.
+Derived g2(Generic arg) { return f(arg); }
+
+// Works since MoreDerived will allways be a Dervied as argument. Moreover the result Dervived instance from
+// f will allways be a generic.
+Generic g3(MoreDerived arg) { return f(arg); }
+        
+```
+
+```csharp
+#List<Generic> lx = new List<Derived>();
+IEnumerable<Generic> ex = new List<Derived>();
+
+```
+
+---
 
 # Subtyping / subclasses / inheritance
 

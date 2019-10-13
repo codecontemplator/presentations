@@ -19,7 +19,7 @@ IEnumerable<IEnumerable<Derived>> eed;
 eed = eeb as IEnumerable<IEnumerable<Derived>>;
 if (eed != null)
 {
-    eed.Dump();
+    Console.WriteLine(eed);
 }
 else
 {
@@ -29,4 +29,4 @@ else
 
 eed = new [] { new [] { new Derived() } };
 eeb = eed;
-eed.Dump();
+//eed.Dump();

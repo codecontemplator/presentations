@@ -122,13 +122,13 @@ List<Animal> animals = new List<Dog>(); // ???
 **Read** works fine... &#128077;
 ```csharp
 foreach(Animal animal in animals) {
-    // ...
+    // Each dog can be treated as an animal. 
 }
 ```
 
 **Write**... not so much... &#128078;
 ```csharp
-animals.Add(new Cat());  // Type violation
+animals.Add(new Cat());  // Should not be able to insert a Cat in a Dog list
 ```
 
 <sup><sub><sub>1</sub></sub></sup> <sub><sub>This is called **covariance**. Type relationship is maintained.</sub></sub>
@@ -146,13 +146,13 @@ List<Dog> dogs = new List<Animal>(); // ???
 
 **Write** works fine... &#128077;
 ```csharp
-dogs.Add(new Dog());
+dogs.Add(new Dog());  // A dog is an animal and can be inserted
 ```
 
 **Read**... not so much... &#128078;
 ```csharp
-foreach(Animal animal in dogs) {
-    // ...
+foreach(Dog dog in dogs) {
+    // Every animal is not a dog
 }
 ```
 
@@ -166,6 +166,10 @@ foreach(Animal animal in dogs) {
 In C# **`List<Dog>`** is not related to **`List<Animal>`**.
 
 List types are **invariant** and no conversion (neither implicit nor explicit) exists. 
+
+**Read+Write** data structures should be **invariant**.<sup>1</sup>
+
+<sup><sub><sub>1</sub></sub></sup> <sub><sub>Arrays are covariant in C# for historic reasons. This is not type safe though.</sub></sub>
 
 ---
 
@@ -212,26 +216,39 @@ Does not work. &#128078;
 
 # Variance Conversion
 
-C# does not follow covariance all the way. 
+C# does not follow covariance (nor contravariance) all the way. 
 
 Variant types are converted according to the specific rules of **variance conversion**.
 
-Variance convertable types requires that the 
+For **`A<S>`** to be *variant convertable* to **`A<T>`** it is required that **`S`** can be *implicitly converted* to **`T`**.
+
+Probable motive; cast can be expensive or hard to prove. 
+
+```csharp
+IEnumerable<Animal> animals = 
+    new List<Animal> 
+        { 
+            ..., // long list of dogs
+            new Cat() 
+        };
+
+IEnumerable<Dog> dogs = (IEnumerable<Dog>)animals;
+```
 
 ---
 
 # C# syntax 
 
-### Covariance
+### Covariance - out
 
 ```csharp
-public interface ICovariantInT<out T> { ... }
+public interface IEnumerable<out T> ...
 ```
 
-### Contravariance
+### Contravariance - in
 
 ```csharp
-public interface IContravariantInT<in T> { ... }
+public delegate void Action<in T>(T obj);
 ```
 
 ---

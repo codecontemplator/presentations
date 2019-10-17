@@ -193,8 +193,36 @@ because **`List<Dog>`** implements **`IEnumerable<Dog>`** and...
 **`IEnumerable<T>`** is covariance in **`T`**.
 
 ---
+
 # Subtyping - Complex types
-## Enumerations
+## Actions
+
+**`Action<T>`** is contravariant in **`T`**.
+
+```csharp
+class Animal { }
+class Dog : Animal { public void Pet() {} }
+class Bulldog : Dog { }
+
+Action<Dog> beNiceToDog = dog => dog.Pet();
+```
+
+If covariant this would work
+
+```csharp
+Action<Animal> beNiceToAnimal = beNiceToDog;
+beNiceToAnimal(new Fish());  // Cannot pet animals in general
+```
+
+Due to contravariance, this works however
+
+```csharp
+Action<Bulldog> beNiceToBulldog = beNiceToDog;
+beNiceToBulldog(new Bulldog());  // Bulldogs are dogs so this works
+```
+---
+
+# Variance Conversion
 
 "Downcast" works...
 
@@ -214,7 +242,7 @@ Does not work. &#128078;
 
 ---
 
-# Variance Conversion
+# Variance Conversion (continued)
 
 C# does not follow covariance (nor contravariance) all the way. 
 
@@ -239,13 +267,17 @@ IEnumerable<Dog> dogs = (IEnumerable<Dog>)animals;
 
 # C# syntax 
 
-### Covariance - out
+### Covariance
+
+Covariant type parameters are declared using the **out** keyword.
 
 ```csharp
 public interface IEnumerable<out T> ...
 ```
 
-### Contravariance - in
+### Contravariance
+
+Contravariant type parameters are declared using the **in** keyword.
 
 ```csharp
 public delegate void Action<in T>(T obj);

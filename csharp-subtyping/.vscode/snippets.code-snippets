@@ -15,12 +15,18 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"BaseAndDerived": {
+	"Animal": {
 		"scope": "",
-		"prefix": "base",
+		"prefix": "animal",
 		"body": [
-			"class Base { }",
-			"class Derived : Base {}"
+			"class Animal { }"
+		]
+	},
+	"Dog": {
+		"scope": "",
+		"prefix": "dog",
+		"body": [
+			"class Dog  : Animal { }"
 		]
 	}
 }

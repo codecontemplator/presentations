@@ -317,6 +317,24 @@ IEnumerable<IEnumerable<Derived>> derived = new List<List<Derived>>();
 IEnumerable<IEnumerable<Base>> @base = derived;
 ```
 
+---
+
+# Summary
+
+**`IEnumerable<T>`** is covariant. Thus, this works:
+
+```csharp
+IEnumerable<Dog> dogs;
+IEnumerable<Animal> animals = dogs;
+```
+
+**`Action<T>`** is contravariant. Thus, this works:
+
+```csharp
+Action<Animal> takeCareOfAnimal;
+Action<Dog> takeCareOfDog = takeCareOfAnimal;
+```
+    
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
     </script>

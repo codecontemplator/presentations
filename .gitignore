@@ -1,1 +1,6 @@
 node_modules/
+Debug
+obj
+model-based-testing/src/.vs
+model-based-testing/src/mbt-webapp/mbt-webapp.csproj.user
+model-based-testing/src/mbt-webapp/appsettings.Development.json

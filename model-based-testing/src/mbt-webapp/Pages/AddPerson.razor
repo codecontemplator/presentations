@@ -1,0 +1,60 @@
+﻿@page "/"
+
+@using mbt_lib
+@inject IPersonStore PersonStore
+
+<h1>Add person</h1>
+
+<EditForm Model="@_personModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            National Id:
+            <InputText id="nationalId" @bind-Value="_personModel.RowKey" />
+        </label>
+
+    </p>
+
+    <p>
+        Country:
+        <InputSelect id="country" @bind-Value="_personModel.PartitionKey">
+            <option value="">Select country ...</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Norway">Norway</option>
+        </InputSelect>
+    </p>
+
+
+    <p>
+        Name:
+        <InputText id="name" @bind-Value="_personModel.Name" />
+    </p>
+
+    <p>
+        Eye Color:
+        <InputSelect id="eyeColor" @bind-Value="_personModel.EyeColor">
+            <option value="">Select eye color ...</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Brown">Brown</option>
+        </InputSelect>
+    </p>
+
+    <p>
+        <button type="submit">Submit</button>
+    </p>
+</EditForm>
+
+@code {
+    private PersonEntity _personModel = new PersonEntity();
+
+    private async void HandleValidSubmit()
+    {
+        await PersonStore.Add(_personModel);
+        _personModel = new PersonEntity();
+        StateHasChanged();
+    }
+}

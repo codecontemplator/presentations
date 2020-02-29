@@ -1,0 +1,102 @@
+﻿@page "/search"
+
+@using mbt_lib
+@inject IPersonStore PersonStore
+
+<h1>Search person</h1>
+
+<EditForm Model="@_personModel" OnValidSubmit="HandleSearchSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            National Id:
+            <InputText id="nationalId" @bind-Value="_personModel.RowKey" />
+        </label>
+
+    </p>
+
+    <p>
+        Country:
+        <InputSelect id="country" @bind-Value="_personModel.PartitionKey">
+            <option value="">Select country ...</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Norway">Norway</option>
+        </InputSelect>
+    </p>
+
+    <p>
+        Eye Color:
+        <InputSelect id="eyeColor" @bind-Value="_personModel.EyeColor">
+            <option value="">Select eye color ...</option>
+            <option value="Blue">Blue</option>
+            <option value="Green">Green</option>
+            <option value="Brown">Brown</option>
+        </InputSelect>
+    </p>
+
+    <p>
+        <button type="submit">Search</button>
+    </p>
+</EditForm>
+
+@if(_isSeaching)
+{
+    <p>Searching... please wait!</p>
+}
+
+@if (_searchResult != null)
+{
+    if (_searchResult.Count == 0) 
+    { 
+        <p>No matches</p>
+    } 
+    else
+    {
+        <p>
+            Matches:
+        </p>
+        <p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>National Id</th>
+                        <th>Country</th>
+                        <th>Name</th>
+                        <th>Eye Color</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var person in _searchResult)
+                    {
+                        <tr>
+                            <th>@person.RowKey</th>
+                            <th>@person.PartitionKey</th>
+                            <th>@person.Name</th>
+                            <th>@person.EyeColor</th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </p>
+    }
+}
+
+@code {
+    private PersonEntity _personModel = new PersonEntity();
+    private bool _isSeaching = false;
+    private List<PersonEntity> _searchResult;
+
+    private async void HandleSearchSubmit()
+    {
+        _isSeaching = true;
+        _searchResult = null;
+        StateHasChanged();
+        var searchResult = await PersonStore.Search(_personModel.RowKey, _personModel.PartitionKey, _personModel.EyeColor);
+        _isSeaching = false;
+        _searchResult = searchResult.ToList();
+        StateHasChanged();
+    }
+}

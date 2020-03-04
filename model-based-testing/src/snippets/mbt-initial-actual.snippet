@@ -19,7 +19,7 @@
       <Code Language="csharp" Delimiter="$"><![CDATA[                var config = new StoreConfig
                 {
                     ConnectionString = Environment.GetEnvironmentVariable("DOTNET_StoreConfig__ConnectionString"),
-                    TableNamePrefix = "PersonEntitiesTemp" + Guid.NewGuid().ToString().Replace("-", "")
+                    TableNamePrefix = "TempPersonEntities" + Guid.NewGuid().ToString().Replace("-", "")
                 };
 
                 return new PersonStore(Options.Create(config));

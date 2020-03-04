@@ -26,21 +26,26 @@ namespace mbt_test
 
         public override Property Post(PersonStore store, PersonStoreSimulator simulator)
         {
-            var entitySet = new List<PersonEntity>();
-            entitySet.AddRange(simulator.Persons);
-            entitySet.Add(new PersonEntity { RowKey = "273523532241129057", PartitionKey = "Sweden", EyeColor = "Brown" });
+            var queries =
+                from entity in Gen.Elements((IEnumerable<PersonEntity>)simulator.Persons)
+                from nationalId in Gen.Elements(entity.RowKey, null, "750329709752307")
+                from country in Gen.Elements(entity.PartitionKey, null, "India")
+                from eyeColor in Gen.Elements(entity.EyeColor, null, "Red")
+                where nationalId != null || country != null || eyeColor != null
+                select (nationalId, country, eyeColor);
 
-            var testCaseGenerator =
-                from entity in Gen.Elements((IEnumerable<PersonEntity>)entitySet)
-                select new { Query = entity };
-
-            return Prop.ForAll(Arb.From(testCaseGenerator), testCase =>
+            return Prop.ForAll(Arb.From(queries), query =>
                 Enumerable.SequenceEqual(
-                    store.Search(testCase.Query.RowKey, testCase.Query.PartitionKey, testCase.Query.EyeColor).Result,
-                    simulator.Search(testCase.Query.RowKey, testCase.Query.PartitionKey, testCase.Query.EyeColor).Result,
+                    store.Search(query.nationalId, query.country, query.eyeColor).Result,
+                    simulator.Search(query.nationalId, query.country, query.eyeColor).Result,
                     PersonEntityComparer.Instance
                 )
             );
+        }
+
+        public override string ToString()
+        {
+            return $"Add {_personEntity.RowKey} {_personEntity.PartitionKey} {_personEntity.EyeColor}";
         }
     }
 }

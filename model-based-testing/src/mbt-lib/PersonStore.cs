@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using mtb_webapp;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace mbt_lib
@@ -24,10 +25,11 @@ namespace mbt_lib
 
         public async Task InsertOrReplace(PersonEntity person)
         {
+            await DeleteEntityIfExists(person);
             var tableName = $"{_tableNamePrefix}{person.EyeColor}";
             var table = _tableClient.GetTableReference(tableName);
             await table.CreateIfNotExistsAsync();
-            var insertOperation = TableOperation.InsertOrReplace(person);
+            var insertOperation = TableOperation.Insert(person);
             await table.ExecuteAsync(insertOperation);
         }
 
@@ -70,7 +72,7 @@ namespace mbt_lib
             return result;
         }
 
-        async Task<IEnumerable<CloudTable>> GetTables(string eyeColor)
+        private async Task<IEnumerable<CloudTable>> GetTables(string eyeColor = null)
         {
             var result = new List<CloudTable>();
             if (string.IsNullOrEmpty(eyeColor))
@@ -91,6 +93,28 @@ namespace mbt_lib
             }
 
             return result;
+        }
+
+        private async Task DeleteEntityIfExists(PersonEntity person)
+        {
+            var tables = await GetTables();
+            var query =
+                TableQuery.CombineFilters(
+                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, person.RowKey),
+                    TableOperators.And,
+                    TableQuery.GenerateFilterCondition("PartiionKey", QueryComparisons.Equal, person.RowKey)
+                    );
+
+            foreach(var table in tables)
+            {
+                var queryResult = await table.ExecuteQuerySegmentedAsync(new TableQuery<PersonEntity>().Where(query), null);
+                var personToDelete = queryResult.FirstOrDefault();
+                if (personToDelete != null)
+                {
+                    var deleteOperation = TableOperation.Delete(personToDelete);
+                    await table.ExecuteAsync(deleteOperation);
+                }
+            }
         }
     }
 }

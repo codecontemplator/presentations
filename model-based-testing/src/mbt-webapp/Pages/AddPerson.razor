@@ -3,7 +3,7 @@
 @using mbt_lib
 @inject IPersonStore PersonStore
 
-<h1>Add person</h1>
+<h1>Register person</h1>
 
 <EditForm Model="@_personModel" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -53,7 +53,7 @@
 
     private async void HandleValidSubmit()
     {
-        await PersonStore.Add(_personModel);
+        await PersonStore.InsertOrReplace(_personModel);
         _personModel = new PersonEntity();
         StateHasChanged();
     }

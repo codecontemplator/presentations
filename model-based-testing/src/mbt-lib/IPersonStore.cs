@@ -5,7 +5,7 @@ namespace mbt_lib
 {
     public interface IPersonStore
     {
-        Task Add(PersonEntity person);
+        Task InsertOrReplace(PersonEntity person);
         Task<IEnumerable<PersonEntity>> Search(string nationalId, string country, string eyeColor);
     }
 }

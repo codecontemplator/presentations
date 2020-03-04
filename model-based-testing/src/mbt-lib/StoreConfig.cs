@@ -8,5 +8,6 @@ namespace mtb_webapp
     public class StoreConfig
     {
         public string ConnectionString { get; set; }
+        public string TableNamePrefix { get; set; }
     }
 }

@@ -5,15 +5,8 @@ namespace mbt_lib
 {
     public class PersonEntity : TableEntity
     {
-        ///// <summary>
-        ///// National Id
-        ///// </summary>
-        //public string RowKey { get; set; }
-
-        ///// <summary>
-        ///// Country
-        ///// </summary>
-        //public string PartitionKey { get; set; }
+        // RowKey === National Id
+        // PartitionKey === Country
 
         public string Name { get; set; }
 

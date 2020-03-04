@@ -10,23 +10,24 @@ namespace mbt_lib
     public class PersonStore : IPersonStore
     {
         private CloudTableClient _tableClient;
-        const string TablePrefix = "PersonEntities";
+        private readonly string _tableNamePrefix;
         private readonly StoreConfig _storeConfig;
 
-        public PersonStore(IOptionsMonitor<StoreConfig> storeConfig)
+        public PersonStore(IOptions<StoreConfig> storeConfig)
         {
-            _storeConfig = storeConfig.CurrentValue;
+            _storeConfig = storeConfig.Value;
             CloudStorageAccount storageAccount;
             storageAccount = CloudStorageAccount.Parse(_storeConfig.ConnectionString);
             _tableClient = storageAccount.CreateCloudTableClient();
+            _tableNamePrefix = _storeConfig.TableNamePrefix;
         }
 
-        public async Task Add(PersonEntity person)
+        public async Task InsertOrReplace(PersonEntity person)
         {
-            var tableName = $"{TablePrefix}{person.EyeColor}";
+            var tableName = $"{_tableNamePrefix}{person.EyeColor}";
             var table = _tableClient.GetTableReference(tableName);
             await table.CreateIfNotExistsAsync();
-            var insertOperation = TableOperation.Insert(person);
+            var insertOperation = TableOperation.InsertOrReplace(person);
             await table.ExecuteAsync(insertOperation);
         }
 
@@ -77,13 +78,13 @@ namespace mbt_lib
                 TableContinuationToken continuationToken = null;
                 do
                 {
-                    var tempResult = await _tableClient.ListTablesSegmentedAsync(TablePrefix, continuationToken);
+                    var tempResult = await _tableClient.ListTablesSegmentedAsync(_tableNamePrefix, continuationToken);
                     result.AddRange(tempResult);
                 } while (continuationToken != null);
             }
             else
             {
-                var tableName = $"{TablePrefix}{eyeColor}";
+                var tableName = $"{_tableNamePrefix}{eyeColor}";
                 var table = _tableClient.GetTableReference(tableName);
                 var exists = await table.ExistsAsync();
                 if (exists) result.Add(table);

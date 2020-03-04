@@ -15,7 +15,7 @@ namespace mbt_test
         }
 
         [FsCheck.NUnit.Property(MaxTest = 15, EndSize = 15)]
-        public Property PersonStoreShouldBehaveAsSimulator() => (new CommandGenerator()).ToProperty();
+        public Property PersonStoreShouldBehaveAsSimulator() => (new PersonStoreCommandGenerator()).ToProperty();
 
         [Test]
         public async Task DeleteTempTables()

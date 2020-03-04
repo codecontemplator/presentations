@@ -1,7 +1,6 @@
 ﻿using FsCheck;
 using mbt_lib;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace mbt_test
@@ -15,13 +14,11 @@ namespace mbt_test
             _personEntity = personEntity;
         }
 
-        public override PersonStore RunActual(PersonStore store)
-        {
-            store.InsertOrReplace(_personEntity).Wait();
-            return store;
-        }
+        public override PersonStore RunActual(PersonStore store) => Run(store);
 
-        public override PersonStoreSimulator RunModel(PersonStoreSimulator store)
+        public override PersonStoreSimulator RunModel(PersonStoreSimulator store) => Run(store);
+
+        private T Run<T>(T store) where T : IPersonStore
         {
             store.InsertOrReplace(_personEntity).Wait();
             return store;
@@ -44,30 +41,6 @@ namespace mbt_test
                     PersonEntityComparer.Instance
                 )
             );
-        }
-
-        private class PersonEntityComparer : IEqualityComparer<PersonEntity>
-        {
-            static PersonEntityComparer()
-            {
-                Instance = new PersonEntityComparer();
-            }
-
-            public bool Equals([AllowNull] PersonEntity x, [AllowNull] PersonEntity y)
-            {
-                return 
-                    x.RowKey == y.RowKey && 
-                    x.PartitionKey == y.PartitionKey && 
-                    x.EyeColor == y.EyeColor && 
-                    x.Name == y.Name;
-            }
-
-            public int GetHashCode([DisallowNull] PersonEntity obj)
-            {
-                return obj.RowKey.GetHashCode();
-            }
-
-            public static PersonEntityComparer Instance { get; }
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace mbt_test
 {
-    class CommandGenerator : ICommandGenerator<PersonStore, PersonStoreSimulator>
+    class PersonStoreCommandGenerator : ICommandGenerator<PersonStore, PersonStoreSimulator>
     {
         
         public PersonStore InitialActual

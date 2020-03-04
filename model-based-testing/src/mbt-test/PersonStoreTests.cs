@@ -14,7 +14,7 @@ namespace mbt_test
         {
         }
 
-        [FsCheck.NUnit.Property(MaxTest = 15, EndSize = 15)]
+        [FsCheck.NUnit.Property(MaxTest = 15, EndSize = 15, Replay = "867624238,296714373")]
         public Property PersonStoreShouldBehaveAsSimulator() => (new PersonStoreCommandGenerator()).ToProperty();
 
         [Test]

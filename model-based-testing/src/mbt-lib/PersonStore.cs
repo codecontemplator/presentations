@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using mtb_webapp;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -98,12 +99,7 @@ namespace mbt_lib
         private async Task DeleteEntityIfExists(PersonEntity person)
         {
             var tables = await GetTables();
-            var query =
-                TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, person.RowKey),
-                    TableOperators.And,
-                    TableQuery.GenerateFilterCondition("PartiionKey", QueryComparisons.Equal, person.RowKey)
-                    );
+            var query = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, person.RowKey);
 
             foreach(var table in tables)
             {

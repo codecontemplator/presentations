@@ -35,12 +35,19 @@ namespace mbt_test
                 select (nationalId, country, eyeColor);
 
             return Prop.ForAll(Arb.From(queries), query =>
-                Enumerable.SequenceEqual(
+                SearchResultsAreEquivalent(
                     store.Search(query.nationalId, query.country, query.eyeColor).Result,
-                    simulator.Search(query.nationalId, query.country, query.eyeColor).Result,
-                    PersonEntityComparer.Instance
+                    simulator.Search(query.nationalId, query.country, query.eyeColor).Result
                 )
             );
+        }
+
+        private static bool SearchResultsAreEquivalent(IEnumerable<PersonEntity> a, IEnumerable<PersonEntity> b)
+        {
+            return Enumerable.SequenceEqual(
+                a.OrderBy(x => x.RowKey), 
+                b.OrderBy(x => x.RowKey), 
+                PersonEntityComparer.Instance);
         }
 
         public override string ToString()

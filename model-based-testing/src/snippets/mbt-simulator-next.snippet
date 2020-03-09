@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>mbt-initial-actual</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[                            return
+                from ...
+                let entity = new PersonEntity { RowKey = nationalId, PartitionKey = country, EyeColor = eyeColor, Name = name }
+                select new InsertOrReplaceCommand(entity) as Command<PersonStore, PersonStoreSimulator>;
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>mbt-command-post-condition</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[                public override Property Post(PersonStore store, PersonStoreSimulator simulator)
+        {
+            var queryGen = Gen.Constant(new { nationalId = "", country = "", eyeColor = "" });
+            return Prop.ForAll(Arb.From(queryGen), query =>
+                TestHelper.SearchResultsAreEquivalent(
+                    store.Search(query.nationalId, query.country, query.eyeColor).Result,
+                    simulator.Search(query.nationalId, query.country, query.eyeColor).Result)
+            );
+        }
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

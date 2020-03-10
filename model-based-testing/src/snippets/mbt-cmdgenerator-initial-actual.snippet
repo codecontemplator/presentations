@@ -5,7 +5,7 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>mbt-command-next-template</Title>
+      <Title>mbt-cmdgenerator-initial-actual</Title>
       <Author>
       </Author>
       <Description>
@@ -16,10 +16,13 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[                            return
-                from ...
-                let entity = new PersonEntity { RowKey = nationalId, PartitionKey = country, EyeColor = eyeColor, Name = name }
-                select new InsertOrReplaceCommand(entity) as Command<PersonStore, PersonStoreSimulator>;
+      <Code Language="csharp" Delimiter="$"><![CDATA[                var config = new StoreConfig
+                {
+                    ConnectionString = Environment.GetEnvironmentVariable("DOTNET_StoreConfig__ConnectionString"),
+                    TableNamePrefix = "TempPersonEntities" + Guid.NewGuid().ToString().Replace("-", "")
+                };
+
+                return new PersonStore(Options.Create(config));
 ]]></Code>
     </Snippet>
   </CodeSnippet>

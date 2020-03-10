@@ -5,7 +5,7 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>mbt-simulator-search-query</Title>
+      <Title>mbt-simulator-search</Title>
       <Author>
       </Author>
       <Description>
@@ -16,7 +16,9 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[                            if (!string.IsNullOrWhiteSpace(nationalId))
+      <Code Language="csharp" Delimiter="$"><![CDATA[                                        IEnumerable<PersonEntity> query = _persons.Values;
+
+            if (!string.IsNullOrWhiteSpace(nationalId))
                 query = query.Where(x => x.RowKey == nationalId);
 
             if (!string.IsNullOrWhiteSpace(country))
@@ -24,6 +26,8 @@
 
             if (!string.IsNullOrWhiteSpace(eyeColor))
                 query = query.Where(x => x.EyeColor == eyeColor);
+
+            return Task.FromResult(query);
 ]]></Code>
     </Snippet>
   </CodeSnippet>

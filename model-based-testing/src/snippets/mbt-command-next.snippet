@@ -5,7 +5,7 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>mbt-initial-actual</Title>
+      <Title>mbt-command-next</Title>
       <Author>
       </Author>
       <Description>
@@ -16,8 +16,12 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[                            return
-                from ...
+      <Code Language="csharp" Delimiter="$"><![CDATA[            return
+                from nationalIdRaw in Gen.ArrayOf(10, Gen.Choose(0,9))
+                from country in Gen.Elements("Sweden", "Denmark", "Norway")
+                from eyeColor in Gen.Elements("Blue", "Green", "Brown")
+                from name in Arb.Generate<string>()
+                let nationalId = DigitsToString(nationalIdRaw)
                 let entity = new PersonEntity { RowKey = nationalId, PartitionKey = country, EyeColor = eyeColor, Name = name }
                 select new InsertOrReplaceCommand(entity) as Command<PersonStore, PersonStoreSimulator>;
 ]]></Code>

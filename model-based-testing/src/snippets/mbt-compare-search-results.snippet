@@ -16,13 +16,41 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[        private static bool SearchResultsAreEquivalent(IEnumerable<PersonEntity> a, IEnumerable<PersonEntity> b)
+      <Code Language="csharp" Delimiter="$"><![CDATA[        static class TestHelper
+    {
+        public static bool SearchResultsAreEquivalent(IEnumerable<PersonEntity> a, IEnumerable<PersonEntity> b)
         {
             return Enumerable.SequenceEqual(
-                a.OrderBy(x => x.RowKey), 
-                b.OrderBy(x => x.RowKey), 
+                a.OrderBy(x => x.RowKey),
+                b.OrderBy(x => x.RowKey),
                 PersonEntityComparer.Instance);
         }
+
+
+        class PersonEntityComparer : IEqualityComparer<PersonEntity>
+        {
+            static PersonEntityComparer()
+            {
+                Instance = new PersonEntityComparer();
+            }
+
+            public bool Equals([AllowNull] PersonEntity x, [AllowNull] PersonEntity y)
+            {
+                return
+                    x.RowKey == y.RowKey &&
+                    x.PartitionKey == y.PartitionKey &&
+                    x.EyeColor == y.EyeColor &&
+                    x.Name == y.Name;
+            }
+
+            public int GetHashCode([DisallowNull] PersonEntity obj)
+            {
+                return obj.RowKey.GetHashCode();
+            }
+
+            public static PersonEntityComparer Instance { get; }
+        }
+    }
 ]]></Code>
     </Snippet>
   </CodeSnippet>

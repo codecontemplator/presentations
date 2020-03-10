@@ -5,7 +5,7 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>mbt-initial-actual</Title>
+      <Title>mbt-cmdgenerator-digits-to-string</Title>
       <Author>
       </Author>
       <Description>
@@ -16,13 +16,7 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[                var config = new StoreConfig
-                {
-                    ConnectionString = Environment.GetEnvironmentVariable("DOTNET_StoreConfig__ConnectionString"),
-                    TableNamePrefix = "TempPersonEntities" + Guid.NewGuid().ToString().Replace("-", "")
-                };
-
-                return new PersonStore(Options.Create(config));
+      <Code Language="csharp" Delimiter="$"><![CDATA[        private static string DigitsToString(IEnumerable<int> digits) => string.Join("", digits.Select(x => x.ToString()));
 ]]></Code>
     </Snippet>
   </CodeSnippet>

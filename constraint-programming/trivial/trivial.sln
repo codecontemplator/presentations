@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trivial-02", "trivial-02\tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trivial-03", "trivial-03\trivial-03.csproj", "{7FFF2184-AD75-4DB8-8227-FB3C7910CC07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trivial-04", "trivial-04\trivial-04.csproj", "{A0F8591B-DA7C-4007-B2F7-748A31278CE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{7FFF2184-AD75-4DB8-8227-FB3C7910CC07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7FFF2184-AD75-4DB8-8227-FB3C7910CC07}.Release|x64.ActiveCfg = Release|Any CPU
 		{7FFF2184-AD75-4DB8-8227-FB3C7910CC07}.Release|x64.Build.0 = Release|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Debug|x64.Build.0 = Debug|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Release|x64.ActiveCfg = Release|Any CPU
+		{A0F8591B-DA7C-4007-B2F7-748A31278CE4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

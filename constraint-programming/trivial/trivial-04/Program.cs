@@ -1,14 +1,14 @@
 ﻿Solution solution = null;
 
-for(var x=0; x<=2; x++)
+for(int x=0; x<=2; x++)
 {
-    for(var y=0; y<=2; y++)
+    for(int y=0; y<=2; y++)
     {
-        for(var z =0; z<=2; z++)
+        for(int z =0; z<=2; z++)
         {
             if (x != y)
             {
-                var objective = x + y + z;
+                int objective = x + y + z;
                 if (solution == null || objective > solution.objective)
                 {
                     solution = new Solution(x, y, z, objective);

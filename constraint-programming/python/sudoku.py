@@ -1,5 +1,5 @@
 from ortools.sat.python import cp_model
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 sudokuRaw = "010020300004005060070000008006900070000100002030048000500006040000800106008000000"
 
@@ -9,7 +9,7 @@ class Cell(NamedTuple):
     row: int
     col: int
     block: int
-    var: cp_model.IntVar
+    var: Any
 
 cells = []
 for row in range(9):

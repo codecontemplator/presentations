@@ -41,10 +41,26 @@
 		"prefix": "#cell",
 		"body": [
 			"class Cell(NamedTuple):",
-			"  row: int",
-			"  col: int",
-			"  block: int",
-			"  value: Any"
+			"    row: int",
+			"    col: int",
+			"    block: int",
+			"    value: Any"
+		]
+	},
+	"Truck class": {
+		"scope": "python",
+		"prefix": "#truck",
+		"body": [
+			"class Truck(NamedTuple):"
+			"    capacity: int"
+		]
+	},
+	"Box class": {
+		"scope": "python",
+		"prefix": "#box",
+		"body": [
+			"class Box(NamedTuple):"
+			"    weight: int"
 		]
 	},
 	"Ortools model": {

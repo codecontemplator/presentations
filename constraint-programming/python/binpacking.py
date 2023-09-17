@@ -32,12 +32,6 @@ for ti in range(len(trucks)):
             [ boxInTruck[(ti,bi)] * boxes[bi].weight for bi in range(len(boxes)) ]
         ) <= trucks[ti].capacity * truckInUse[ti])
 
-# if a truck is not used it must not contains any boxes
-#for ti in range(len(trucks)):
-#    for bi in range(len(boxes)):
-#        v = boxInTruck[(ti,bi)]
-#        model.Add(v == 0).OnlyEnforceIf(truckInUse[ti].Not())
-
 model.Minimize(sum(truckInUse))
 
 solver = cp_model.CpSolver()

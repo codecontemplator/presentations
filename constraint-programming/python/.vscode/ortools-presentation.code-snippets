@@ -46,5 +46,24 @@
 			"  block: int",
 			"  value: Any"
 		]
+	},
+	"Ortools model": {
+		"scope": "python",
+		"prefix": "#model",
+		"body": [
+			"model = cp_model.CpModel()",
+		]
+	},
+	"Ortools solver": {
+		"scope": "python",
+		"prefix": "#solver",
+		"body": [
+			"solver = cp_model.CpSolver()",
+			"status = solver.Solve(model)",
+			"if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:",
+			"    print(\"solved\")",
+			"else:",
+			"	print(\"not solved\")"
+		]
 	}
 }

@@ -7,8 +7,8 @@ class Truck(NamedTuple):
 class Box(NamedTuple):
     weight: int
 
-trucks = [Truck(8000), Truck(5000), Truck(3000)]
-boxes = [Box(4000), Box(3000), Box(3000), Box(2000)]
+trucks = [Truck(3000), Truck(5000), Truck(8000)]
+boxes = [Box(3000), Box(3000), Box(4000), Box(2000)]
 
 model = cp_model.CpModel()
 

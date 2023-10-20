@@ -95,5 +95,14 @@
 			"else:",
 			"	print(\"not solved\")"
 		]
+	},
+	"Ortools status check": {
+		"scope": "python",
+		"prefix": "#status check",
+		"body": [
+			"if status != cp_model.FEASIBLE and status != cp_model.OPTIMAL:",
+    		"  print(\"failed\")",
+    		"  exit(-1)"
+		]
 	}
 }

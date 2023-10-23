@@ -27,10 +27,9 @@ for bi in range(len(boxes)):
 
 # the box weight must not exceed capacity
 for ti in range(len(trucks)):
-    model.Add(
-        sum(
-            [ boxInTruck[(ti,bi)] * boxes[bi].weight for bi in range(len(boxes)) ]
-        ) <= trucks[ti].capacity * truckInUse[ti])
+    boxWeight = [ boxInTruck[(ti,bi)] * boxes[bi].weight for bi in range(len(boxes)) ]
+    totalWeight = sum(boxWeight)
+    model.Add(totalWeight <= trucks[ti].capacity * truckInUse[ti])
 
 model.Minimize(sum(truckInUse))
 

@@ -7,7 +7,7 @@ class Truck(NamedTuple):
 class Box(NamedTuple):
     weight: int
 
-trucks = [Truck(3000), Truck(5000), Truck(8000)]
+trucks = [Truck(3000), Truck(5000), Truck(3000), Truck(3000), Truck(8000)]
 boxes = [Box(3000), Box(3000), Box(4000), Box(2000)]
 
 model = cp_model.CpModel()
@@ -25,7 +25,8 @@ model = cp_model.CpModel()
 solver = cp_model.CpSolver()
 status = solver.Solve(model)
 
-if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
-    print("solved")
-else:
-    print("not solved")
+if status != cp_model.OPTIMAL and status != cp_model.FEASIBLE:
+    print("no solution found")
+    exit(-1)
+
+print("solution found")
